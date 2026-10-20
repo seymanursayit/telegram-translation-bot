@@ -1,0 +1,164 @@
+{
+  "name": "Telegram translation workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": "={{ [\"message\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -272,
+        -160
+      ],
+      "id": "523d183a-e607-4b98-a353-597ec67cb9c1",
+      "name": "Telegram Trigger",
+      "webhookId": "60fbb785-f680-4fe0-afbf-af75f0e446a1",
+      "credentials": {
+        "telegramApi": {
+          "id": "ZhpWMmZZGeYKYTOP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        48
+      ],
+      "id": "431aeec7-6101-49d7-b9bc-2e31e6c4a71a",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "MEGY51byYbrtXaNM",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 2
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -32,
+        48
+      ],
+      "id": "72c82f56-b4d2-4c2c-b733-14f093aa8e14",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        -160
+      ],
+      "id": "f501b94c-b4ac-4152-bcf9-f98b246757d7",
+      "name": "Send a text message",
+      "webhookId": "4d22a590-5b1c-461c-aee2-b0e3c536ac8b",
+      "credentials": {
+        "telegramApi": {
+          "id": "ZhpWMmZZGeYKYTOP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Sen bir çeviri asistanısın.\n\nKullanıcının mesajını analiz et.\n\n1. Kullanıcı aynı mesajda hem çevrilecek metni hem de hedef dili belirtmişse, metni hedef dile çevir.\n2. Hedef dil belirtilmemişse: \"Lütfen çevirmek istediğiniz dili belirtin.\" yaz.\n3. Çevrilecek metin belirtilmemişse: \"Lütfen çevirmek istediğiniz metni yazın.\" yaz.\n4. Kullanıcı önce metni gönderip daha sonra hedef dili gönderirse, Simple Memory kullanarak önceki mesajdaki metni bul ve çevir.\n5. Kullanıcı \"/start\" yazarsa kendini kısaca tanıt ve nasıl kullanılacağını anlat.\n6. Sadece gerekli cevabı ver. Gereksiz açıklama yapma.\n7. Çevirilerde metnin anlamını ve tonunu koru.\n8. Kullanıcı hangi dili isterse o dile çevir.\n9. Son 5 mesajlık konuşma bağlamını dikkate al."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        -160
+      ],
+      "id": "33198283-963e-4b05-8a3a-75057638aad3",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "DwTsMh8RnRWVITXC",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "6563e788-924e-47b6-9b8e-3018f308db84",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7eb9ea2d5aa1f3604684f0a67fef1f83971ca2769aa29f8b2f79a56d09f61a2f"
+  },
+  "nodeGroups": [],
+  "id": "vm3Onk7ftMT9DesB",
+  "tags": []
+}
