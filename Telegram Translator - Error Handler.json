@@ -1,0 +1,65 @@
+{
+  "name": "Telegram Translator - Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d69c5ca0-b46c-4f81-81a3-50ed736722d8",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "8760210746",
+        "text": "=⚠️ Telegram Translator'da bir hata oluştu.  Hata: {{ $json.execution.error.message }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7cdbe936-16ca-42bb-af54-4a073aa112b5",
+      "name": "Send a text message",
+      "webhookId": "ee671a66-ea5e-4a32-92b5-5a0c2814fad2",
+      "credentials": {
+        "telegramApi": {
+          "id": "ZhpWMmZZGeYKYTOP",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ea8f173b-a830-4bc9-8175-bc225f129751",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7eb9ea2d5aa1f3604684f0a67fef1f83971ca2769aa29f8b2f79a56d09f61a2f"
+  },
+  "nodeGroups": [],
+  "id": "DwTsMh8RnRWVITXC",
+  "tags": []
+}
