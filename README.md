@@ -70,8 +70,17 @@ The bot can also continue the conversation using previous messages.
 
 > **Note:** API keys, bot tokens, and other sensitive credentials should never be uploaded to GitHub.
 
+## Workflow Screenshots
+
+### Main Translation Workflow
+![Telegram Translation Workflow](telegram_translation_workflow.png)
+
+### Error Handler Workflow
+![Telegram Translation Error Handler](telegram_translation_error_handler.png)
+
 ## 👩‍💻 Author
 
 **Şeymanur Sayıt**
 
 This project was created as a practical AI automation project using n8n and Telegram.
+
